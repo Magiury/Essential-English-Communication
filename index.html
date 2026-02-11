@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Alphabest – Home</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    background: url("class.jpg") center / cover no-repeat;
+    background-position: calc(50% - 12px) center; 
+    overflow: hidden;
+    color: #333;
+    background-attachment: fixed;
+}
+
+/* Dark overlay */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 0;
+}
+
+/* ================= APP WRAPPER ================= */
+#app {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    text-align: center;
+    padding-top: 18px;
+    transition: opacity 1.2s ease, transform 1.2s ease;
+}
+
+#app.fade-out {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+/* ================= LOGO ================= */
+.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    opacity: 0;
+    transform: translateY(-15px);
+    animation: logoFade 2s ease forwards;
+    animation-delay: 0.8s;
+}
+
+.logo img {
+    width: 70px;
+    opacity: 0.95;
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.2));
+}
+
+/* ================= SEARCH ================= */
+.search-bar {
+    margin: 18px auto 10px;
+    width: 520px;
+    max-width: 90%;
+    position: relative;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: searchFade 2s ease forwards;
+    animation-delay: 1.3s;
+    z-index: 1001;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+    outline: none;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(5px);
+    color: white;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.search-results {
+    position: absolute;
+    top: 105%;
+    left: 0;
+    right: 0;
+    background: rgba(15, 15, 15, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 6px;
+    border: 1px solid rgba(157, 255, 179, 0.2);
+    max-height: 280px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+    text-align: left;
+}
+
+.result-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: 0.2s;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+}
+
+.result-item:hover {
+    background: rgba(157, 255, 179, 0.15);
+    color: #9dffb3;
+}
+
+/* ================= MENU ================= */
+.menu {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 12px;
+    opacity: 0;
+    animation: menuFade 1.8s ease forwards;
+    animation-delay: 1.9s;
+    transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.menu a {
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    opacity: 0.8;
+    transition: all 0.6s ease;
+    display: inline-block;
+}
+
+.search-active .menu a:nth-child(1),
+.search-active .menu a:nth-child(2) { transform: translateX(-150px); opacity: 0; }
+.search-active .menu a:nth-child(3),
+.search-active .menu a:nth-child(4) { transform: translateX(150px); opacity: 0; }
+
+/* ================= CREDIT OPTION (THÊM MỚI THEO YÊU CẦU) ================= */
+.credit-link {
+    position: fixed;
+    bottom: 30px;
+    left: 40px;
+    z-index: 10;
+    color: white;
+    text-decoration: none;
+    font-size: 12px; /* Nhỏ hơn menu chính */
+    font-weight: 500;
+    letter-spacing: 2px;
+    opacity: 0;
+    text-transform: uppercase;
+    animation: menuFade 1.8s ease forwards;
+    animation-delay: 2.2s;
+    transition: all 0.6s ease;
+}
+
+.credit-link:hover {
+    color: #9dffb3;
+    text-shadow: 0 0 10px rgba(157, 255, 179, 0.5);
+    transform: scale(1.05);
+}
+
+/* Fade out khi search hoặc chuyển trang */
+.search-active .credit-link,
+.navigating .credit-link {
+    opacity: 0 !important;
+    transform: translateX(-20px);
+}
+
+/* ================= COUNTDOWN HUD ================= */
+.countdown-hud {
+    position: fixed;
+    top: 42%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 5;
+    pointer-events: none;
+    opacity: 0;
+    animation: countdownFadeIn 2.5s ease forwards;
+    animation-delay: 2s;
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+@keyframes countdownFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.search-active .countdown-hud,
+.navigating .countdown-hud {
+    opacity: 0 !important;
+    transform: translate(-50%, -60%) scale(0.9);
+}
+
+.cd-title { font-size: 14px; letter-spacing: 3px; color: rgba(180,255,200,0.7); margin-bottom: 10px; text-transform: uppercase; }
+.cd-time { font-size: 64px; font-weight: 700; letter-spacing: 4px; color: #9dffb3; text-shadow: 0 0 10px rgba(157,255,179,0.4); }
+.cd-sub { margin-top: 12px; font-size: 13px; letter-spacing: 2px; color: rgba(180,255,200,0.5); }
+
+/* ================= MINI COUNTDOWN ================= */
+.mini-countdown {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 5;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.search-active .mini-countdown { opacity: 1; visibility: visible; }
+.navigating .mini-countdown { opacity: 0 !important; }
+
+.mini-cd-time { font-size: 20px; font-weight: 700; color: #9dffb3; letter-spacing: 2px; }
+.mini-cd-sub { font-size: 10px; color: rgba(180,255,200,0.5); text-transform: uppercase; }
+
+@keyframes logoFade { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes searchFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes menuFade { from { opacity: 0; } to { opacity: 1; } }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body id="mainBody">
+
+<div id="app">
+    <div class="logo">
+        <img src="THPT Chuyên Bạc Liêu-Picsart-AiImageEnhancer.png" alt="School Logo">
+        <img src="Alphabest Logo.png" alt="Alphabest Logo">
+    </div>
+
+    <div class="search-bar">
+        <input type="text" id="ai-search-input" placeholder="Search memories (lớp 10, mdmx, culture night...)" autocomplete="off">
+        <div id="ai-results" class="search-results"></div>
+    </div>
+
+    <div class="menu">
+        <a href="about.html" onclick="navigate(event, 'about.html', true)">ABOUT US</a>
+        <a href="album.html" onclick="navigate(event, 'album.html')">ALBUM</a>
+        <a href="thought.html" onclick="navigate(event, 'thought.html')">OUR THOUGHT</a>
+        <a href="chat.html" onclick="navigate(event, 'chat.html')">CHAT</a>
+    </div>
+</div>
+
+<a href="credit.html" class="credit-link" onclick="navigate(event, 'credit.html')">CREDIT</a>
+
+<div class="countdown-hud">
+   <div class="cd-title">NATIONAL HIGHSCHOOL EXAM</div>
+   <div class="cd-time" id="cd-time">00:00:00:00</div>
+   <div class="cd-sub">TARGET DATE — 11, 12 JUNE 2026</div>
+</div>
+
+<div class="mini-countdown">
+    <div class="mini-cd-time" id="mini-cd-time">00:00:00:00</div>
+    <div class="mini-cd-sub">DAYS UNTIL EXAM 2026</div>
+</div>
+
+<script>
+const searchInput = document.getElementById('ai-search-input');
+const resultsBox = document.getElementById('ai-results');
+const mainBody = document.getElementById('mainBody');
+
+const albumKeywords = ['lớp 10', 'lớp 11', 'lớp 12', 'mdmx', 'mừng đảng mừng xuân', 'mđmx', 'culture night', 'cn', 'vhdg', 'văn học dân gian', 'ghat', 'gian hàng ẩm thực'];
+const teacherKeywords = ['giáo viên', 'thầy cô', 'nguyễn đình tùng', 'phạm trương thanh tùng', 'trần ngọc bích', 'chủ nhiệm'];
+
+searchInput.addEventListener('focus', () => { mainBody.classList.add('search-active'); });
+searchInput.addEventListener('blur', () => {
+    setTimeout(() => {
+        mainBody.classList.remove('search-active');
+        resultsBox.style.display = 'none';
+    }, 200);
+});
+
+function triggerTransition(url) {
+    mainBody.classList.add('navigating');
+    document.getElementById("app").classList.add("fade-out");
+    setTimeout(() => { window.location.href = url; }, 1200);
+}
+
+searchInput.addEventListener('input', (e) => {
+    const val = e.target.value.toLowerCase().trim();
+    resultsBox.innerHTML = '';
+    if (val.length < 1) { resultsBox.style.display = 'none'; return; }
+
+    let found = false;
+    albumKeywords.forEach(k => {
+        if (k.includes(val)) {
+            addResultItem(k.toUpperCase(), 'fa-images', () => { triggerTransition(`album.html#${k.replace(/\s/g, '')}`); });
+            found = true;
+        }
+    });
+
+    teacherKeywords.forEach(k => {
+        if (k.includes(val)) {
+            addResultItem(k.toUpperCase(), 'fa-chalkboard-teacher', () => { triggerTransition(`about.html#lead`); });
+            found = true;
+        }
+    });
+
+    if (!found && val.length > 1) {
+        addResultItem(`Tìm cảm nghĩ về: ${val.toUpperCase()}`, 'fa-comment-dots', () => { triggerTransition(`thought.html?search=${val}`); });
+    }
+    resultsBox.style.display = resultsBox.innerHTML === '' ? 'none' : 'block';
+});
+
+function addResultItem(text, icon, action) {
+    const div = document.createElement('div');
+    div.className = 'result-item';
+    div.innerHTML = `<i class="fas ${icon}"></i> <span>${text}</span>`;
+    div.onclick = action;
+    resultsBox.appendChild(div);
+}
+
+/* ================= COUNTDOWN LOGIC ================= */
+const targetDate = new Date("2026-06-11T00:00:00").getTime();
+function updateCountdown() {
+    const now = new Date().getTime();
+    const diff = targetDate - now;
+    if (diff <= 0) return;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+    const timeStr = `${String(days).padStart(2,"0")}:${String(hours).padStart(2,"0")}:${String(minutes).padStart(2,"0")}:${String(seconds).padStart(2,"0")}`;
+    document.getElementById("cd-time").innerText = timeStr;
+    document.getElementById("mini-cd-time").innerText = timeStr;
+}
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+/* ================= NAVIGATE ================= */
+function navigate(e, url, isAbout = false) {
+    e.preventDefault();
+    if(isAbout) document.body.classList.add("sink-in-right");
+    triggerTransition(url);
+}
+</script>
+
+</body>
+</html>
