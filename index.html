@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Alphabest – Home</title>
+<title>Essential English Communication</title>
 
 <style>
 * {
@@ -35,31 +35,13 @@ body::before {
     z-index: 2;
     width: 100%;
     text-align: center;
-    padding-top: 18px;
+    padding-top: 5px;
     transition: opacity 1.2s ease, transform 1.2s ease;
 }
 
 #app.fade-out {
     opacity: 0;
     transform: translateY(-10px);
-}
-
-/* ================= LOGO ================= */
-.logo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 18px;
-    opacity: 0;
-    transform: translateY(-15px);
-    animation: logoFade 2s ease forwards;
-    animation-delay: 0.8s;
-}
-
-.logo img {
-    width: 70px;
-    opacity: 0.95;
-    filter: drop-shadow(0 0 8px rgba(255,255,255,0.2));
 }
 
 /* ================= SEARCH ================= */
@@ -149,84 +131,6 @@ body::before {
 .search-active .menu a:nth-child(3),
 .search-active .menu a:nth-child(4) { transform: translateX(150px); opacity: 0; }
 
-/* ================= CREDIT OPTION (THÊM MỚI THEO YÊU CẦU) ================= */
-.credit-link {
-    position: fixed;
-    bottom: 30px;
-    left: 40px;
-    z-index: 10;
-    color: white;
-    text-decoration: none;
-    font-size: 12px; /* Nhỏ hơn menu chính */
-    font-weight: 500;
-    letter-spacing: 2px;
-    opacity: 0;
-    text-transform: uppercase;
-    animation: menuFade 1.8s ease forwards;
-    animation-delay: 2.2s;
-    transition: all 0.6s ease;
-}
-
-.credit-link:hover {
-    color: #9dffb3;
-    text-shadow: 0 0 10px rgba(157, 255, 179, 0.5);
-    transform: scale(1.05);
-}
-
-/* Fade out khi search hoặc chuyển trang */
-.search-active .credit-link,
-.navigating .credit-link {
-    opacity: 0 !important;
-    transform: translateX(-20px);
-}
-
-/* ================= COUNTDOWN HUD ================= */
-.countdown-hud {
-    position: fixed;
-    top: 42%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    z-index: 5;
-    pointer-events: none;
-    opacity: 0;
-    animation: countdownFadeIn 2.5s ease forwards;
-    animation-delay: 2s;
-    transition: opacity 0.8s ease, transform 0.8s ease;
-}
-
-@keyframes countdownFadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-.search-active .countdown-hud,
-.navigating .countdown-hud {
-    opacity: 0 !important;
-    transform: translate(-50%, -60%) scale(0.9);
-}
-
-.cd-title { font-size: 14px; letter-spacing: 3px; color: rgba(180,255,200,0.7); margin-bottom: 10px; text-transform: uppercase; }
-.cd-time { font-size: 64px; font-weight: 700; letter-spacing: 4px; color: #9dffb3; text-shadow: 0 0 10px rgba(157,255,179,0.4); }
-.cd-sub { margin-top: 12px; font-size: 13px; letter-spacing: 2px; color: rgba(180,255,200,0.5); }
-
-/* ================= MINI COUNTDOWN ================= */
-.mini-countdown {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
-    z-index: 5;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.8s ease, visibility 0.8s ease;
-}
-
-.search-active .mini-countdown { opacity: 1; visibility: visible; }
-.navigating .mini-countdown { opacity: 0 !important; }
-
-.mini-cd-time { font-size: 20px; font-weight: 700; color: #9dffb3; letter-spacing: 2px; }
-.mini-cd-sub { font-size: 10px; color: rgba(180,255,200,0.5); text-transform: uppercase; }
-
-@keyframes logoFade { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes searchFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes menuFade { from { opacity: 0; } to { opacity: 1; } }
 </style>
@@ -236,10 +140,6 @@ body::before {
 <body id="mainBody">
 
 <div id="app">
-    <div class="logo">
-        <img src="THPT Chuyên Bạc Liêu-Picsart-AiImageEnhancer.png" alt="School Logo">
-        <img src="Alphabest Logo.png" alt="Alphabest Logo">
-    </div>
 
     <div class="search-bar">
         <input type="text" id="ai-search-input" placeholder="Search memories (lớp 10, mdmx, culture night...)" autocomplete="off">
@@ -248,23 +148,10 @@ body::before {
 
     <div class="menu">
         <a href="about.html" onclick="navigate(event, 'about.html', true)">ABOUT US</a>
-        <a href="album.html" onclick="navigate(event, 'album.html')">ALBUM</a>
-        <a href="thought.html" onclick="navigate(event, 'thought.html')">OUR THOUGHT</a>
-        <a href="chat.html" onclick="navigate(event, 'chat.html')">CHAT</a>
+        <a href="album.html" onclick="navigate(event, 'lessons.html')">LESSONS</a>
+        <a href="thought.html" onclick="navigate(event, 'companion.html')">COMPANION</a>
+        <a href="chat.html" onclick="navigate(event, 'help.html')">HELP</a>
     </div>
-</div>
-
-<a href="credit.html" class="credit-link" onclick="navigate(event, 'credit.html')">CREDIT</a>
-
-<div class="countdown-hud">
-   <div class="cd-title">NATIONAL HIGHSCHOOL EXAM</div>
-   <div class="cd-time" id="cd-time">00:00:00:00</div>
-   <div class="cd-sub">TARGET DATE — 11, 12 JUNE 2026</div>
-</div>
-
-<div class="mini-countdown">
-    <div class="mini-cd-time" id="mini-cd-time">00:00:00:00</div>
-    <div class="mini-cd-sub">DAYS UNTIL EXAM 2026</div>
 </div>
 
 <script>
@@ -323,23 +210,6 @@ function addResultItem(text, icon, action) {
     resultsBox.appendChild(div);
 }
 
-/* ================= COUNTDOWN LOGIC ================= */
-const targetDate = new Date("2026-06-11T00:00:00").getTime();
-function updateCountdown() {
-    const now = new Date().getTime();
-    const diff = targetDate - now;
-    if (diff <= 0) return;
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const minutes = Math.floor((diff / (1000 * 60)) % 60);
-    const seconds = Math.floor((diff / 1000) % 60);
-    const timeStr = `${String(days).padStart(2,"0")}:${String(hours).padStart(2,"0")}:${String(minutes).padStart(2,"0")}:${String(seconds).padStart(2,"0")}`;
-    document.getElementById("cd-time").innerText = timeStr;
-    document.getElementById("mini-cd-time").innerText = timeStr;
-}
-setInterval(updateCountdown, 1000);
-updateCountdown();
-
 /* ================= NAVIGATE ================= */
 function navigate(e, url, isAbout = false) {
     e.preventDefault();
@@ -350,3 +220,5 @@ function navigate(e, url, isAbout = false) {
 
 </body>
 </html>
+
+
