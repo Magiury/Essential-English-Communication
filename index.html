@@ -205,7 +205,7 @@ body.inactive #app {
 }
 
 /* =========================
-   TOP LEFT LOGO
+   TOP LEFT LOGO ANIMATION
    ========================= */
 
 #siteLogo{
@@ -215,14 +215,22 @@ body.inactive #app {
   height:70px;
   width:auto;
   z-index:20000;
-  opacity:.9;
-  transition:.2s ease;
-  cursor:pointer;
+  opacity:0;
+  transform:translateY(-8px);
+  transition:opacity 1.2s ease, transform 1.2s ease;
+  pointer-events:auto;
 }
 
-#siteLogo:hover{
-  opacity:1;
-  transform:translateY(-2px);
+/* Khi trang load xong */
+#siteLogo.show{
+  opacity:.95;
+  transform:translateY(0);
+}
+
+/* Khi rời trang */
+#siteLogo.fade-out{
+  opacity:0;
+  transform:translateY(-10px);
 }
 
 </style>
@@ -283,6 +291,8 @@ searchInput.addEventListener('blur', () => {
 function triggerTransition(url) {
     mainBody.classList.add('navigating');
     document.getElementById("app").classList.add("fade-out");
+    siteLogo.classList.remove("show");
+    siteLogo.classList.add("fade-out");
     setTimeout(() => { window.location.href = url; }, 1200);
 }
 
@@ -351,6 +361,21 @@ document.addEventListener("visibilitychange", () => {
 inactiveOverlay.addEventListener("click", () => {
     document.body.classList.remove("inactive");
     inactiveOverlay.classList.remove("active");
+});
+
+const siteLogo = document.getElementById("siteLogo");
+
+/* Fade in khi load */
+window.addEventListener("load", () => {
+    setTimeout(() => {
+        siteLogo.classList.add("show");
+    }, 300); // delay nhẹ cho cinematic effect
+});
+
+/* Fade out khi rời trang */
+window.addEventListener("beforeunload", () => {
+    siteLogo.classList.remove("show");
+    siteLogo.classList.add("fade-out");
 });
 
 </script>
