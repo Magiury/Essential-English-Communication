@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -203,12 +204,35 @@ body.inactive #app {
     50% { transform: translateY(-6px); }
 }
 
+/* =========================
+   TOP LEFT LOGO
+   ========================= */
+
+#siteLogo{
+  position:fixed;
+  top:22px;
+  left:30px;
+  height:70px;
+  width:auto;
+  z-index:20000;
+  opacity:.9;
+  transition:.2s ease;
+  cursor:pointer;
+}
+
+#siteLogo:hover{
+  opacity:1;
+  transform:translateY(-2px);
+}
+
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body id="mainBody">
+  
+<img src="echo-logo.png" id="siteLogo" alt="E.C.H.O Logo">
 
 <!-- VIDEO BACKGROUND -->
 <video autoplay muted loop playsinline id="bg-video">
