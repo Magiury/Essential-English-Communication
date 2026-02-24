@@ -149,6 +149,60 @@ body::before {
     from { opacity: 0; } 
     to { opacity: 1; } 
 }
+
+/* ================= TAB OUT OVERLAY ================= */
+
+#inactiveOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 15, 25, 0.75);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    z-index: 9999;
+}
+
+/* Khi active */
+#inactiveOverlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Blur toàn bộ app phía sau */
+body.inactive #app {
+    filter: blur(10px);
+    transform: scale(1.01);
+    transition: all 0.4s ease;
+}
+
+/* Icon chuột */
+.inactive-icon {
+    font-size: 32px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 18px;
+    animation: subtleFloat 2.5s ease-in-out infinite;
+}
+
+/* Text giống hình */
+.inactive-text {
+    font-size: 18px;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 1px;
+    font-weight: 400;
+}
+
+/* Float animation rất nhẹ */
+@keyframes subtleFloat {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -160,6 +214,15 @@ body::before {
 <video autoplay muted loop playsinline id="bg-video">
     <source src="earth-rotating.mp4" type="video/mp4">
 </video>
+
+<div id="inactiveOverlay">
+    <div class="inactive-icon">
+        <i class="fas fa-mouse"></i>
+    </div>
+    <div class="inactive-text">
+        Press to resume pratice
+    </div>
+</div>
 
 <div id="app">
 
@@ -249,6 +312,23 @@ function navigate(e, url, isAbout = false) {
     if(isAbout) document.body.classList.add("sink-in-right");
     triggerTransition(url);
 }
+
+const inactiveOverlay = document.getElementById("inactiveOverlay");
+
+/* Khi tab bị rời đi */
+document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+        document.body.classList.add("inactive");
+        inactiveOverlay.classList.add("active");
+    }
+});
+
+/* Click để resume */
+inactiveOverlay.addEventListener("click", () => {
+    document.body.classList.remove("inactive");
+    inactiveOverlay.classList.remove("active");
+});
+
 </script>
 
 </body>
