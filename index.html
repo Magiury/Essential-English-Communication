@@ -1,7 +1,7 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
 <meta charset="UTF-8">
 <title>Essential English Communication</title>
 
@@ -233,6 +233,90 @@ body.inactive #app {
   transform:translateY(-10px);
 }
 
+/* ================= HERO COUNTER PREMIUM ================= */
+
+.hero-center {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+    pointer-events: none;
+    text-align: center;
+}
+
+/* SỐ CHÍNH */
+.hero-number {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(60px, 7vw, 120px);
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: rgba(255,255,255,0.92);
+    text-shadow: 0 0 20px rgba(255,255,255,0.08);
+    opacity: 0;
+    transform: translateY(25px);
+    transition: 1.2s cubic-bezier(.19,1,.22,1);
+}
+
+/* DÒNG MÔ TẢ */
+.hero-sub {
+    margin-top: 18px;
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: 1.4s cubic-bezier(.19,1,.22,1);
+}
+
+/* QUOTE CLICKABLE */
+.hero-quote {
+    margin-top: 26px;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.55);
+    cursor: pointer;
+    pointer-events: auto;
+    transition: 0.4s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    position: relative;
+}
+
+.hero-quote::after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0%;
+    height: 1px;
+    background: white;
+    transition: 0.4s ease;
+}
+
+.hero-quote:hover {
+    color: white;
+    letter-spacing: 1px;
+}
+
+.hero-quote:hover::after {
+    width: 100%;
+}
+
+/* SHOW */
+.hero-visible .hero-number,
+.hero-visible .hero-sub,
+.hero-visible .hero-quote {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -253,6 +337,14 @@ body.inactive #app {
     </div>
     <div class="inactive-text">
         Press to resume pratice
+    </div>
+</div>
+
+<div class="hero-center" id="heroSection">
+    <div class="hero-number" id="englishCounter">0</div>
+    <div class="hero-sub">English Learners Across The Globe</div>
+    <div class="hero-quote" onclick="navigate(event, 'lessons.html')">
+        BE ONE OF THEM?
     </div>
 </div>
 
@@ -378,6 +470,41 @@ window.addEventListener("beforeunload", () => {
     siteLogo.classList.add("fade-out");
 });
 
+/* ================= COUNTER FULL NUMBER ================= */
+
+const counterEl = document.getElementById("englishCounter");
+const heroSection = document.getElementById("heroSection");
+
+function animateCounter(target, duration) {
+    const startTime = performance.now();
+
+    function update(currentTime) {
+        const progress = Math.min((currentTime - startTime) / duration, 1);
+        const value = Math.floor(progress * target);
+
+        counterEl.textContent = formatNumber(value);
+
+        if (progress < 1) {
+            requestAnimationFrame(update);
+        } else {
+            counterEl.textContent = formatNumber(target);
+        }
+    }
+
+    requestAnimationFrame(update);
+}
+
+function formatNumber(num) {
+    return num.toLocaleString("en-US");
+}
+
+/* Trigger khi load */
+window.addEventListener("load", () => {
+    setTimeout(() => {
+        heroSection.classList.add("hero-visible");
+        animateCounter(1500000000, 2500);
+    }, 500);
+});
 </script>
 
 </body>
