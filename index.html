@@ -317,6 +317,15 @@ body.inactive #app {
     transform: translateY(0);
 }
 
+/* HERO FADE OUT KHI NAVIGATE */
+.hero-center.fade-out .hero-number,
+.hero-center.fade-out .hero-sub,
+.hero-center.fade-out .hero-quote {
+    opacity: 0;
+    transform: translateY(-25px);
+    transition: 0.8s ease;
+}
+
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -382,10 +391,19 @@ searchInput.addEventListener('blur', () => {
 
 function triggerTransition(url) {
     mainBody.classList.add('navigating');
+
     document.getElementById("app").classList.add("fade-out");
+
+    /* HERO fade out */
+    heroSection.classList.add("fade-out");
+
+    /* Logo fade out */
     siteLogo.classList.remove("show");
     siteLogo.classList.add("fade-out");
-    setTimeout(() => { window.location.href = url; }, 1200);
+
+    setTimeout(() => { 
+        window.location.href = url; 
+    }, 1200);
 }
 
 searchInput.addEventListener('input', (e) => {
