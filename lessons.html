@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lessons - E.C.H.O</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:'Inter',sans-serif;
+}
+
+body{
+    height:100vh;
+    background:#111827;
+    color:white;
+    display:flex;
+    flex-direction:column;
+}
+
+/* ================= TOP BAR ================= */
+
+.topbar{
+    height:55px;
+    background:#1f2937;
+    display:flex;
+    align-items:center;
+    padding:0 20px;
+    border-bottom:1px solid rgba(255,255,255,0.05);
+}
+
+.topbar h1{
+    font-size:16px;
+    font-weight:500;
+    letter-spacing:1px;
+    opacity:.8;
+}
+
+/* ================= TABS ================= */
+
+.tabs{
+    display:flex;
+    gap:30px;
+    padding:12px 25px;
+    background:#111827;
+    border-bottom:1px solid rgba(255,255,255,0.05);
+}
+
+.tab{
+    cursor:pointer;
+    font-size:14px;
+    letter-spacing:1px;
+    opacity:.6;
+    position:relative;
+    transition:.3s;
+}
+
+.tab:hover{
+    opacity:1;
+}
+
+.tab.active{
+    opacity:1;
+}
+
+.tab.active::after{
+    content:"";
+    position:absolute;
+    bottom:-12px;
+    left:0;
+    width:100%;
+    height:2px;
+    background:#38bdf8;
+}
+
+/* ================= MAIN ================= */
+
+.main{
+    flex:1;
+    display:flex;
+}
+
+/* Sidebar */
+
+.sidebar{
+    width:220px;
+    background:#0f172a;
+    padding:20px;
+    border-right:1px solid rgba(255,255,255,0.05);
+}
+
+.sidebar h3{
+    font-size:13px;
+    font-weight:400;
+    opacity:.5;
+    margin-bottom:15px;
+    letter-spacing:1px;
+}
+
+.sidebar-item{
+    margin-bottom:12px;
+    font-size:14px;
+    opacity:.7;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.sidebar-item:hover{
+    opacity:1;
+}
+
+/* File Area */
+
+.files{
+    flex:1;
+    padding:30px;
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+    gap:25px;
+}
+
+.file{
+    background:#1e293b;
+    border-radius:10px;
+    padding:20px 10px;
+    text-align:center;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.file:hover{
+    background:#334155;
+    transform:translateY(-4px);
+}
+
+.file i{
+    font-size:28px;
+    margin-bottom:12px;
+    color:#38bdf8;
+}
+
+.file span{
+    display:block;
+    font-size:13px;
+    opacity:.8;
+}
+
+/* Fade animation */
+
+.fade{
+    animation:fadeIn .4s ease;
+}
+
+@keyframes fadeIn{
+    from{opacity:0; transform:translateY(10px);}
+    to{opacity:1; transform:translateY(0);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+    <h1>E.C.H.O Lessons Explorer</h1>
+</div>
+
+<div class="tabs">
+    <div class="tab active" onclick="switchTab('listening', this)">Listening</div>
+    <div class="tab" onclick="switchTab('speaking', this)">Speaking</div>
+    <div class="tab" onclick="switchTab('reading', this)">Reading</div>
+    <div class="tab" onclick="switchTab('writing', this)">Writing</div>
+</div>
+
+<div class="main">
+
+    <div class="sidebar">
+        <h3>Folders</h3>
+        <div class="sidebar-item">Beginner</div>
+        <div class="sidebar-item">Intermediate</div>
+        <div class="sidebar-item">Advanced</div>
+    </div>
+
+    <div class="files fade" id="fileContainer">
+        <!-- Files render here -->
+    </div>
+
+</div>
+
+<script>
+
+const fileData = {
+    listening:[
+        "Daily Conversation.mp3",
+        "Podcast Practice.mp3",
+        "IELTS Listening 1.mp3",
+        "Accent Training.mp3"
+    ],
+    speaking:[
+        "Pronunciation Drill.mp4",
+        "Shadowing Exercise.mp4",
+        "Public Speaking.mp4"
+    ],
+    reading:[
+        "Short Stories.pdf",
+        "News Article.pdf",
+        "Academic Passage.pdf"
+    ],
+    writing:[
+        "Essay Practice.docx",
+        "Email Writing.docx",
+        "Report Structure.docx"
+    ]
+};
+
+const container = document.getElementById("fileContainer");
+
+function renderFiles(type){
+    container.innerHTML="";
+    fileData[type].forEach(file=>{
+        const div=document.createElement("div");
+        div.className="file fade";
+        div.innerHTML=`
+            <i class="fas fa-file-alt"></i>
+            <span>${file}</span>
+        `;
+        container.appendChild(div);
+    });
+}
+
+function switchTab(type, el){
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    el.classList.add("active");
+    renderFiles(type);
+}
+
+renderFiles("listening");
+
+</script>
+
+</body>
+</html>
