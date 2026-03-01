@@ -17,7 +17,7 @@
 
 body{
     height:100vh;
-    background:#111827;
+    background:#0f172a;
     color:white;
     display:flex;
     flex-direction:column;
@@ -26,19 +26,44 @@ body{
 /* ================= TOP BAR ================= */
 
 .topbar{
-    height:55px;
-    background:#1f2937;
+    height:65px;
+    background:#1e293b;
     display:flex;
     align-items:center;
-    padding:0 20px;
+    padding:0 25px;
     border-bottom:1px solid rgba(255,255,255,0.05);
 }
 
-.topbar h1{
-    font-size:16px;
-    font-weight:500;
-    letter-spacing:1px;
-    opacity:.8;
+/* Logo frame */
+
+.logo-frame{
+    height:42px;
+    width:auto;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:6px 14px;
+    border-radius:10px;
+    background:rgba(255,255,255,0.03);
+    backdrop-filter:blur(6px);
+    transition:.4s;
+}
+
+.logo-frame img{
+    height:100%;
+    width:auto;
+    object-fit:contain;
+    opacity:.9;
+    transition:.4s;
+}
+
+.logo-frame:hover{
+    background:rgba(255,255,255,0.07);
+    transform:translateY(-2px);
+}
+
+.logo-frame:hover img{
+    opacity:1;
 }
 
 /* ================= TABS ================= */
@@ -47,13 +72,13 @@ body{
     display:flex;
     gap:30px;
     padding:12px 25px;
-    background:#111827;
+    background:#0f172a;
     border-bottom:1px solid rgba(255,255,255,0.05);
 }
 
 .tab{
     cursor:pointer;
-    font-size:14px;
+    font-size:13px;
     letter-spacing:1px;
     opacity:.6;
     position:relative;
@@ -85,88 +110,129 @@ body{
     display:flex;
 }
 
-/* Sidebar */
+/* ================= SIDEBAR (TOOLS) ================= */
 
 .sidebar{
     width:220px;
-    background:#0f172a;
-    padding:20px;
+    background:#111827;
+    padding:22px;
     border-right:1px solid rgba(255,255,255,0.05);
 }
 
 .sidebar h3{
-    font-size:13px;
+    font-size:12px;
     font-weight:400;
     opacity:.5;
-    margin-bottom:15px;
-    letter-spacing:1px;
+    margin-bottom:18px;
+    letter-spacing:2px;
+    text-transform:uppercase;
 }
 
-.sidebar-item{
-    margin-bottom:12px;
+.tool-item{
+    margin-bottom:14px;
     font-size:14px;
-    opacity:.7;
+    opacity:.75;
     cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:10px;
     transition:.3s;
 }
 
-.sidebar-item:hover{
+.tool-item:hover{
     opacity:1;
-}
-
-/* File Area */
-
-.files{
-    flex:1;
-    padding:30px;
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
-    gap:25px;
-}
-
-.file{
-    background:#1e293b;
-    border-radius:10px;
-    padding:20px 10px;
-    text-align:center;
-    cursor:pointer;
-    transition:.3s;
-}
-
-.file:hover{
-    background:#334155;
-    transform:translateY(-4px);
-}
-
-.file i{
-    font-size:28px;
-    margin-bottom:12px;
+    transform:translateX(4px);
     color:#38bdf8;
 }
 
-.file span{
-    display:block;
-    font-size:13px;
-    opacity:.8;
+/* ================= FILE AREA ================= */
+
+.files{
+    flex:1;
+    padding:40px;
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
+    gap:35px;
 }
 
-/* Fade animation */
+/* ================= DOCUMENT STYLE ================= */
+
+.file{
+    position:relative;
+    height:200px;
+    background:linear-gradient(to bottom,#f8fafc,#e2e8f0);
+    border-radius:6px;
+    padding:20px 15px;
+    color:#0f172a;
+    cursor:pointer;
+    transition:.4s;
+    box-shadow:
+        0 4px 6px rgba(0,0,0,0.2),
+        0 12px 20px rgba(0,0,0,0.25);
+}
+
+/* góc gấp giấy */
+.file::before{
+    content:"";
+    position:absolute;
+    top:0;
+    right:0;
+    border-top:25px solid #cbd5e1;
+    border-left:25px solid transparent;
+}
+
+/* hiệu ứng như để trên kệ */
+.file::after{
+    content:"";
+    position:absolute;
+    bottom:-10px;
+    left:10%;
+    width:80%;
+    height:10px;
+    background:rgba(0,0,0,0.25);
+    filter:blur(6px);
+    border-radius:50%;
+}
+
+.file:hover{
+    transform:translateY(-10px) scale(1.02);
+    box-shadow:
+        0 10px 15px rgba(0,0,0,0.3),
+        0 25px 35px rgba(0,0,0,0.35);
+}
+
+.file i{
+    font-size:26px;
+    margin-bottom:18px;
+    color:#1e293b;
+}
+
+.file span{
+    font-size:13px;
+    font-weight:500;
+    word-break:break-word;
+}
+
+/* ================= FADE ================= */
 
 .fade{
     animation:fadeIn .4s ease;
 }
 
 @keyframes fadeIn{
-    from{opacity:0; transform:translateY(10px);}
+    from{opacity:0; transform:translateY(15px);}
     to{opacity:1; transform:translateY(0);}
 }
+
 </style>
 </head>
 
 <body>
 
 <div class="topbar">
-    <h1>E.C.H.O Lessons Explorer</h1>
+    <div class="logo-frame">
+        <img src="echo-logo.png" alt="ECHO Logo">
+    </div>
 </div>
 
 <div class="tabs">
@@ -179,15 +245,15 @@ body{
 <div class="main">
 
     <div class="sidebar">
-        <h3>Folders</h3>
-        <div class="sidebar-item">Beginner</div>
-        <div class="sidebar-item">Intermediate</div>
-        <div class="sidebar-item">Advanced</div>
+        <h3>Tools</h3>
+        <div class="tool-item"><i class="fas fa-note-sticky"></i> Notes</div>
+        <div class="tool-item"><i class="fas fa-user-friends"></i> Companion</div>
+        <div class="tool-item"><i class="fas fa-file-lines"></i> Transcript</div>
+        <div class="tool-item"><i class="fas fa-book"></i> Vocabulary</div>
+        <div class="tool-item"><i class="fas fa-pen"></i> Practice</div>
     </div>
 
-    <div class="files fade" id="fileContainer">
-        <!-- Files render here -->
-    </div>
+    <div class="files fade" id="fileContainer"></div>
 
 </div>
 
