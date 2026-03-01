@@ -224,6 +224,78 @@ body{
     to{opacity:1; transform:translateY(0);}
 }
 
+/* RETURN BUTTON */
+
+.return-btn{
+    margin-top:25px;
+    font-size:13px;
+    cursor:pointer;
+    opacity:.6;
+}
+
+.return-btn:hover{
+    opacity:1;
+    text-decoration:underline;
+}
+
+/* ================= WINDOW SYSTEM ================= */
+
+.window{
+    position:absolute;
+    width:420px;
+    height:350px;
+    min-width:300px;
+    min-height:200px;
+    background:#1e293b;
+    border-radius:8px;
+    box-shadow:0 20px 40px rgba(0,0,0,.5);
+    display:flex;
+    flex-direction:column;
+    resize:both;
+    overflow:auto;   /* đổi từ hidden -> auto */
+    z-index:500;
+}
+
+.window-header{
+    height:40px;
+    background:#0f172a;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 12px;
+    cursor:move;
+}
+
+.close-btn{
+    cursor:pointer;
+    opacity:.6;
+}
+.close-btn:hover{opacity:1}
+
+.window-body{
+    flex:1;
+    padding:15px;
+    overflow:auto;
+    background:white;
+    color:black;
+}
+
+.global-return{
+    position:fixed;
+    bottom:20px;
+    left:25px;
+    font-size:13px;
+    opacity:.6;
+    cursor:pointer;
+    z-index:2000;
+    transition:.3s;
+}
+
+.global-return:hover{
+    opacity:1;
+    text-decoration:underline;
+}
+
 </style>
 </head>
 
@@ -244,17 +316,28 @@ body{
 
 <div class="main">
 
-    <div class="sidebar">
-        <h3>Tools</h3>
-        <div class="tool-item"><i class="fas fa-note-sticky"></i> Notes</div>
-        <div class="tool-item"><i class="fas fa-user-friends"></i> Companion</div>
-        <div class="tool-item"><i class="fas fa-file-lines"></i> Transcript</div>
-        <div class="tool-item"><i class="fas fa-book"></i> Vocabulary</div>
-        <div class="tool-item"><i class="fas fa-pen"></i> Practice</div>
-    </div>
+  <div class="sidebar">
+      <h3>Tools</h3>
 
-    <div class="files fade" id="fileContainer"></div>
+      <div class="tool-item" onclick="openNote()">
+          <i class="fas fa-note-sticky"></i> Notes
+      </div>
 
+      <div class="tool-item" onclick="openAI()">
+          <i class="fas fa-user-friends"></i> Companion
+      </div>
+
+      <div class="tool-item" onclick="openTranscript()">
+          <i class="fas fa-file-lines"></i> Transcript
+      </div>
+  </div>
+
+  <div class="files fade" id="fileContainer"></div>
+
+</div>
+
+<div class="global-return" onclick="window.location.href='index.html'">
+    ← Return
 </div>
 
 <script>
@@ -305,6 +388,107 @@ function switchTab(type, el){
 }
 
 renderFiles("listening");
+
+let highestZ = 1000;
+
+function createWindow(title, content){
+    const win = document.createElement("div");
+    win.className = "window";
+    win.style.top = "120px";
+    win.style.left = "250px";
+    win.style.zIndex = highestZ++;
+
+    win.innerHTML = `
+        <div class="window-header">
+            <span>${title}</span>
+            <div class="close-btn">✕</div>
+        </div>
+        <div class="window-body">${content}</div>
+    `;
+
+    document.body.appendChild(win);
+
+    win.querySelector(".close-btn").onclick = () => win.remove();
+
+    const header = win.querySelector(".window-header");
+
+    header.onmousedown = function(e){
+        const offsetX = e.clientX - win.offsetLeft;
+        const offsetY = e.clientY - win.offsetTop;
+
+        document.onmousemove = function(e){
+            win.style.left = e.clientX - offsetX + "px";
+            win.style.top = e.clientY - offsetY + "px";
+        }
+
+        document.onmouseup = function(){
+            document.onmousemove = null;
+        }
+    }
+
+    win.onclick = () => win.style.zIndex = highestZ++;
+}
+
+/* NOTE */
+function openNote(){
+
+    const content = `
+        <textarea 
+            id="noteArea"
+            style="
+                width:100%;
+                height:100%;
+                border:none;
+                outline:none;
+                resize:none;
+                font-family:Inter, sans-serif;
+                font-size:14px;
+                line-height:1.6;
+            "
+            placeholder="Write anything you want..."
+        ></textarea>
+    `;
+
+    createWindow("Note", content);
+
+    setTimeout(()=>{
+        const area = document.getElementById("noteArea");
+
+        /* Load saved note */
+        area.value = localStorage.getItem("echo_note") || "";
+
+        /* Auto save */
+        area.addEventListener("input", ()=>{
+            localStorage.setItem("echo_note", area.value);
+        });
+
+    }, 100);
+}
+
+/* TRANSCRIPT */
+function openTranscript(){
+    const content = `
+        <select style="width:100%;padding:8px;margin-bottom:15px">
+            <option>Daily Conversation</option>
+            <option>Podcast Practice</option>
+            <option>IELTS Listening 1</option>
+        </select>
+        <div>
+        Transcript content appears here...
+        </div>
+    `;
+    createWindow("Transcript", content);
+}
+
+/* AI */
+function openAI(){
+    const content = `
+        <div>
+            <p>AI Companion coming soon...</p>
+        </div>
+    `;
+    createWindow("Companion", content);
+}
 
 </script>
 
