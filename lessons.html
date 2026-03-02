@@ -330,6 +330,10 @@ body{
       <div class="tool-item" onclick="openTranscript()">
           <i class="fas fa-file-lines"></i> Transcript
       </div>
+      
+      <div class="tool-item" onclick="openAnswerSheet()">
+          <i class="fas fa-clipboard-check"></i> Answer Sheet
+      </div>
   </div>
 
   <div class="files fade" id="fileContainer"></div>
@@ -512,6 +516,116 @@ async function openDocument(fileName){
         createWindow(fileName, "Error loading document.");
     }
 }
+
+const answerKeys = {
+    "IELTS_Listening_Test": {
+        1: "A",
+        2: "B",
+        3: "C",
+        4: "A",
+        5: "TRUE"
+    },
+    "IELTS Listening 1.mp3": {
+        1: "hotel",
+        2: "8:30",
+        3: "bus",
+        4: "passport",
+        5: "Friday"
+    }
+};
+
+function openAnswerSheet(){
+
+    const lessonOptions = Object.keys(answerKeys)
+        .map(name => `<option value="${name}">${name}</option>`)
+        .join("");
+
+    const content = `
+        <div>
+            <select id="lessonSelect" 
+                style="width:100%;padding:8px;margin-bottom:15px">
+                ${lessonOptions}
+            </select>
+
+            <div id="answerForm"></div>
+        </div>
+    `;
+
+    createWindow("Answer Sheet", content);
+
+    setTimeout(()=>{
+        loadAnswerForm();
+        document
+            .getElementById("lessonSelect")
+            .addEventListener("change", loadAnswerForm);
+    },100);
+}
+
+function loadAnswerForm(){
+
+    const lesson = document.getElementById("lessonSelect").value;
+    const formDiv = document.getElementById("answerForm");
+
+    const answers = answerKeys[lesson];
+    let html = "";
+
+    Object.keys(answers).forEach(q=>{
+        html += `
+            <div style="margin-bottom:10px">
+                <label>Question ${q}</label><br>
+                <input 
+                    type="text" 
+                    id="q${q}" 
+                    style="width:100%;padding:6px;margin-top:4px"
+                >
+            </div>
+        `;
+    });
+
+    html += `
+        <button onclick="checkAnswers()" 
+            style="
+                margin-top:15px;
+                padding:8px 15px;
+                background:#38bdf8;
+                border:none;
+                color:white;
+                cursor:pointer;
+            ">
+            Submit
+        </button>
+
+        <div id="resultArea" style="margin-top:15px;font-weight:600"></div>
+    `;
+
+    formDiv.innerHTML = html;
+}
+
+function checkAnswers(){
+
+    const lesson = document.getElementById("lessonSelect").value;
+    const correctAnswers = answerKeys[lesson];
+
+    let score = 0;
+    let total = Object.keys(correctAnswers).length;
+
+    Object.keys(correctAnswers).forEach(q=>{
+        const input = document.getElementById("q"+q);
+        const userAnswer = input.value.trim();
+        const correct = correctAnswers[q];
+
+        if(userAnswer.toLowerCase() === correct.toLowerCase()){
+            score++;
+            input.style.border = "2px solid green";
+        }else{
+            input.style.border = "2px solid red";
+        }
+    });
+
+    document.getElementById("resultArea").innerHTML =
+        `Score: ${score} / ${total}`;
+}
+
 </script>
 
 </body>
