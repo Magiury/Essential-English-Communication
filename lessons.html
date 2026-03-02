@@ -370,13 +370,18 @@ const container = document.getElementById("fileContainer");
 
 function renderFiles(type){
     container.innerHTML="";
+
     fileData[type].forEach(file=>{
         const div=document.createElement("div");
         div.className="file fade";
+
         div.innerHTML=`
             <i class="fas fa-file-alt"></i>
             <span>${file}</span>
         `;
+
+        div.onclick = () => openDocument(file);
+
         container.appendChild(div);
     });
 }
@@ -487,7 +492,27 @@ function openAI(){
         "_blank"
     );
 }
-    
+
+async function openDocument(fileName){
+
+    const fileMap = {
+        "IELTS_Listening_Test": "documents/IELTS_Listening_Test.html",
+        "Email Writing.docx": "documents/email.html",
+        "Report Structure.docx": "documents/report.html"
+    };
+
+    if(!fileMap[fileName]) return;
+
+    try{
+        const response = await fetch(fileMap[fileName]);
+        const html = await response.text();
+
+        createWindow(fileName, html);
+
+    }catch(err){
+        createWindow(fileName, "Error loading document.");
+    }
+}
 </script>
 
 </body>
