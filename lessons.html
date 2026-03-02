@@ -519,11 +519,46 @@ async function openDocument(fileName){
 
 const answerKeys = {
     "IELTS_Listening_Test": {
-        1: "A",
-        2: "B",
-        3: "C",
-        4: "A",
-        5: "TRUE"
+        1: ["B"],
+        2: ["C"],
+        3: ["B"],
+        4: ["B"],
+        5: ["Falling from a tree","a tree fall"],
+        6: ["A metal","protective plate"],
+        7: ["Sacrificing his body"],
+        8: ["TRUE"],
+        9: ["NOT GIVEN"],
+        10: ["TRUE"],
+        11: ["B"],
+        12: ["B"],
+        13: ["B"],
+        14: ["B"],
+        15: ["psychological"],
+        16: ["breeding","captive breeding"],
+        17: ["spacious","naturalistic"],
+        18: ["ethical"],
+        19: ["educational"],
+        20: ["endangered"],
+        21: ["B"],
+        22: ["B"],
+        23: ["A"],
+        24: ["B"],
+        25: ["critical thinking"],
+        26: ["data","inherent bias"],
+        27: ["their policies","assessment policies"],
+        28: ["D"],
+        29: ["B"],
+        30: ["E"],
+        31: ["B"],
+        32: ["B"],
+        33: ["B"],
+        34: ["B"],
+        35: ["0.05%","0.05"],
+        36: ["hallucinations","visual hallucinations"],
+        37: ["obesity","metabolic disorders"],
+        38: ["FALSE"],
+        39: ["NOT GIVEN"],
+        40: ["TRUE"]
     },
     "IELTS Listening 1.mp3": {
         1: "hotel",
@@ -611,10 +646,11 @@ function checkAnswers(){
 
     Object.keys(correctAnswers).forEach(q=>{
         const input = document.getElementById("q"+q);
-        const userAnswer = input.value.trim();
-        const correct = correctAnswers[q];
+        const userAnswer = input.value.trim().toLowerCase();
 
-        if(userAnswer.toLowerCase() === correct.toLowerCase()){
+        const correctArray = correctAnswers[q].map(a => a.toLowerCase());
+
+        if(correctArray.includes(userAnswer)){
             score++;
             input.style.border = "2px solid green";
         }else{
