@@ -399,24 +399,39 @@ renderFiles("listening");
 
 let highestZ = 1000;
 
-function createWindow(title, content){
+function createWindow(title, content, audioSrc = null){
+
     const win = document.createElement("div");
     win.className = "window";
     win.style.top = "120px";
     win.style.left = "250px";
     win.style.zIndex = highestZ++;
 
+    let audioButton = "";
+
+    if(audioSrc){
+        audioButton = `
+            <div class="audio-btn" style="cursor:pointer;margin-right:10px;">▶</div>
+        `;
+    }
+
     win.innerHTML = `
         <div class="window-header">
             <span>${title}</span>
-            <div class="close-btn">✕</div>
+            <div style="display:flex;align-items:center;gap:10px;">
+                ${audioButton}
+                <div class="close-btn">✕</div>
+            </div>
         </div>
         <div class="window-body">${content}</div>
     `;
 
     document.body.appendChild(win);
 
-    win.querySelector(".close-btn").onclick = () => win.remove();
+    win.querySelector(".close-btn").onclick = () => {
+        if(audio) audio.pause();
+        win.remove();
+    };
 
     const header = win.querySelector(".window-header");
 
@@ -435,6 +450,28 @@ function createWindow(title, content){
     }
 
     win.onclick = () => win.style.zIndex = highestZ++;
+
+    /* AUDIO LOGIC */
+    let audio = null;
+
+    if(audioSrc){
+        audio = new Audio(audioSrc);
+        const btn = win.querySelector(".audio-btn");
+
+        btn.onclick = () => {
+            if(audio.paused){
+                audio.play();
+                btn.innerText = "⏸";
+            }else{
+                audio.pause();
+                btn.innerText = "▶";
+            }
+        };
+
+        audio.onended = () => {
+            btn.innerText = "▶";
+        };
+    }
 }
 
 /* NOTE */
@@ -499,18 +536,29 @@ function openAI(){
 async function openDocument(fileName){
 
     const fileMap = {
-        "IELTS_Listening_Test": "documents/IELTS_Listening_Test.html",
-        "Email Writing.docx": "documents/email.html",
-        "Report Structure.docx": "documents/report.html"
+        "IELTS_Listening_Test": {
+            html: "documents/IELTS_Listening_Test.html",
+            audio: "documents/IELTS_Listening_Test.mp3"
+        },
+        "Email Writing.docx": {
+            html: "documents/email.html"
+        },
+        "Report Structure.docx": {
+            html: "documents/report.html"
+        }
     };
 
     if(!fileMap[fileName]) return;
 
     try{
-        const response = await fetch(fileMap[fileName]);
+        const response = await fetch(fileMap[fileName].html);
         const html = await response.text();
 
-        createWindow(fileName, html);
+        createWindow(
+            fileName,
+            html,
+            fileMap[fileName].audio || null
+        );
 
     }catch(err){
         createWindow(fileName, "Error loading document.");
