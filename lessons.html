@@ -512,17 +512,48 @@ function openNote(){
 
 /* TRANSCRIPT */
 function openTranscript(){
+
     const content = `
-        <select style="width:100%;padding:8px;margin-bottom:15px">
-            <option>Daily Conversation</option>
-            <option>Podcast Practice</option>
-            <option>IELTS Listening 1</option>
+        <select id="transcriptSelect"
+            style="width:100%;padding:8px;margin-bottom:15px">
+            <option value="IELTS_Listening_Test_Section1.html">Section 1</option>
+            <option value="IELTS_Listening_Test_Section2.html">Section 2</option>
+            <option value="IELTS_Listening_Test_Section3.html">Section 3</option>
+            <option value="IELTS_Listening_Test_Section4.html">Section 4</option>
         </select>
-        <div>
-        Transcript content appears here...
+
+        <div id="transcriptContent"
+            style="
+                max-height:250px;
+                overflow:auto;
+                line-height:1.6;
+            ">
+            Loading transcript...
         </div>
     `;
+
     createWindow("Transcript", content);
+
+    setTimeout(() => {
+
+        const select = document.getElementById("transcriptSelect");
+        const contentDiv = document.getElementById("transcriptContent");
+
+        async function loadTranscript(){
+            try{
+                const response = await fetch("documents/" + select.value);
+                const html = await response.text();
+                contentDiv.innerHTML = html;
+            }catch(err){
+                contentDiv.innerHTML = "Error loading transcript.";
+            }
+        }
+
+        select.addEventListener("change", loadTranscript);
+
+        loadTranscript(); // load mặc định section 1
+
+    },100);
 }
 
 /* AI */
